@@ -7,8 +7,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case "POST": {
       const { email, name, password, username } = userRegisterSchema.parse(req.body)
 
-      // await prisma.user
-      
+      await prisma.user.create({
+        data: {
+          email,
+          name,
+          password,
+          username,
+        },
+      })
+
       break
     }
     case "GET":

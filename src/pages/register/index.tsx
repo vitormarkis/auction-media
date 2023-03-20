@@ -13,7 +13,7 @@ const Register: React.FC = () => {
   const { register, reset, handleSubmit } = useForm<RegisterUserFields>()
 
   const submitHandler: SubmitHandler<RegisterUserFields> = async (formData) => {
-    await axios.post("/api/hello", formData)
+    await axios.post("/api/users", formData)
   }
 
   return (
