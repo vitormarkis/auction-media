@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { IUserRegister } from "@/schemas/users"
 
 interface RegisterUserFields extends IUserRegister {
@@ -9,11 +9,22 @@ interface RegisterUserFields extends IUserRegister {
 }
 
 const Register: React.FC = () => {
-  const [error, setError] = useState("As senhas não coincidem")
+  const [error, setError] = useState("")
   const { register, reset, handleSubmit } = useForm<RegisterUserFields>()
 
   const submitHandler: SubmitHandler<RegisterUserFields> = async (formData) => {
-    await axios.post("/api/users", formData)
+    const { password, repeated_password } = formData
+    
+    if(password !== repeated_password) {
+      setError("As senhas não coincidem")
+      return
+    }
+    
+    try {
+      await axios.post("/api/users", formData)
+    } catch (error) {
+        setError(error.response.data.message);
+    }
   }
 
   return (
@@ -23,7 +34,6 @@ const Register: React.FC = () => {
           <h1 className="text-2xl font-bold">Seja bem-vindo</h1>
           <p className="text font-thin">Cadastre-se para poder continuar</p>
         </div>
-        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form className="flex flex-col" onSubmit={handleSubmit(submitHandler)}>
           <label>Nome:</label>
           <input className="mb-4 rounded-md border border-zinc-300 px-4 py-2" {...register("name")} type="text" placeholder="Pedro da Silva..." />
