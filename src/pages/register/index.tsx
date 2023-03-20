@@ -1,12 +1,10 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
+import axios from 'axios'
+import { IUserRegister } from "@/schemas/users"
 
-interface RegisterUserFields {
-  name: string
-  username: string
-  email: string
-  password: string
+interface RegisterUserFields extends IUserRegister {
   repeated_password: string
 }
 
@@ -15,8 +13,7 @@ const Register: React.FC = () => {
   const { register, reset, handleSubmit } = useForm<RegisterUserFields>()
 
   const submitHandler: SubmitHandler<RegisterUserFields> = async (formData) => {
-    await new Promise((res) => setTimeout(res, 1000))
-    console.log(formData)
+    await axios.post("/api/hello", formData)
   }
 
   return (
@@ -26,6 +23,7 @@ const Register: React.FC = () => {
           <h1 className="text-2xl font-bold">Seja bem-vindo</h1>
           <p className="text font-thin">Cadastre-se para poder continuar</p>
         </div>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form className="flex flex-col" onSubmit={handleSubmit(submitHandler)}>
           <label>Nome:</label>
           <input className="mb-4 rounded-md border border-zinc-300 px-4 py-2" {...register("name")} type="text" placeholder="Pedro da Silva..." />

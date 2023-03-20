@@ -23,6 +23,7 @@ const Login: React.FC = () => {
           <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
           <p className="text font-thin">Preencha seus dados para continuar</p>
         </div>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form className="flex flex-col" onSubmit={handleSubmit(submitHandler)}>
           <label>Nome de usuário:</label>
           <input className="mb-4 rounded-md border border-zinc-300 px-4 py-2" {...register("username")} type="text" placeholder="pedrodasilva" />
