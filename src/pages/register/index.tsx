@@ -1,8 +1,9 @@
+import { IUserRegister } from "@/schemas/users"
+import axios from "axios"
+import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
-import axios, { AxiosError } from 'axios'
-import { IUserRegister } from "@/schemas/users"
 
 interface RegisterUserFields extends IUserRegister {
   repeated_password: string
@@ -14,16 +15,16 @@ const Register: React.FC = () => {
 
   const submitHandler: SubmitHandler<RegisterUserFields> = async (formData) => {
     const { password, repeated_password } = formData
-    
-    if(password !== repeated_password) {
+
+    if (password !== repeated_password) {
       setError("As senhas não coincidem")
       return
     }
-    
+
     try {
       await axios.post("/api/users", formData)
-    } catch (error) {
-        setError(error.response.data.message);
+    } catch (error: any) {
+      setError(error.response.data.message)
     }
   }
 
@@ -46,11 +47,12 @@ const Register: React.FC = () => {
           <label>Confirme sua senha:</label>
           <input className="mb-4 rounded-md border border-zinc-300 px-4 py-2" {...register("repeated_password")} type="password" placeholder="Repita sua senha..." />
           <p className="mb-4">
-            Já possui uma conta? <span className="text-blue-500 underline">Entrar</span>
+            Já possui uma conta?{" "}
+            <Link href="/login" className="text-blue-500 underline">
+              Entrar
+            </Link>
           </p>
-          {error && (
-            <p className="font-semibold text-red-600 text-center mb-2">{error}</p>
-          )}
+          {error && <p className="mb-2 text-center font-semibold text-red-600">{error}</p>}
           <button className="rounded-md bg-blue-500 p-3 text-lg text-white" type="submit">
             Enviar
           </button>
