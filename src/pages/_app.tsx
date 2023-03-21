@@ -1,18 +1,18 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { type Session } from "next-auth"
+import { SessionProvider } from "next-auth/react"
+import { type AppType } from "next/app"
 
-import "@/styles/globals.css";
+import { AuthProvider } from "@/contexts/AuthProvider"
+import "@/styles/globals.css"
 
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </SessionProvider>
-  );
-};
+  )
+}
 
-export default MyApp;
+export default MyApp

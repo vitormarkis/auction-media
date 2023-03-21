@@ -1,24 +1,23 @@
+import { useAuth } from "@/contexts/AuthProvider"
+import { IUserLogin, userLoginSchema } from "@/schemas/users"
 import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
 
-interface LoginUserFields {
-  username: string
-  password: string
-}
-
 const Login: React.FC = () => {
   const [error, setError] = useState("Esse usuário não existe em nosso banco de dados")
-  const { register, reset, handleSubmit } = useForm<LoginUserFields>()
+  const { register, reset, handleSubmit } = useForm<IUserLogin>()
+  const { login } = useAuth()
 
-  const submitHandler: SubmitHandler<LoginUserFields> = async (formData) => {
-    await new Promise((res) => setTimeout(res, 1000))
-    console.log(formData)
+  const submitHandler: SubmitHandler<IUserLogin> = async (formData) => {
+    const { password, username } = userLoginSchema.parse(formData)
+    
+    await login({ password, username })
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-[#f7f7f7] text-neutral-700">
+    <div className="flex h-screen items-center justify-center bg-[#d7d7d7] text-neutral-700">
       <div className="w-[320px] rounded-md bg-white p-3 shadow-lg shadow-black/20" style={{ gridArea: "2 / 2 / 3 / 3" }}>
         <div className="mb-4">
           <h1 className="text-2xl font-bold">Faça login ou cadastre-se</h1>

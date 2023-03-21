@@ -21,10 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if(!passwordMatches) return res.status(400).json({ message: "Usuário ou senha incorretos." })
 
-    const accessToken = jwt.sign({ user_id: user.id }, env.SERVER_SECRET_KEY, {
+    const { password: userPassword, ...sessionUser } = user
+    
+    const accessToken = jwt.sign({}, env.SERVER_SECRET_KEY, {
       subject: user.id,
     })
-
-    return res.cookie
+    
+    return res.json({
+      token: accessToken,
+      user: sessionUser
+    })
   }
 }
