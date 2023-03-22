@@ -1,10 +1,13 @@
+import { env } from "@/env.mjs"
 import { userLoginSchema } from "@/schemas/users"
 import { prisma } from "@/server/db"
 import bcrypt from "bcryptjs"
 import NextAuth, { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import GithubProvider from "next-auth/providers/github"
 
 const customOptions: AuthOptions = {
+  // adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -38,7 +41,12 @@ const customOptions: AuthOptions = {
         return sessionUser
       },
     }),
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
   ],
+  secret: env.SERVER_SECRET_KEY,
   pages: {
     signIn: "/auth/login",
   },

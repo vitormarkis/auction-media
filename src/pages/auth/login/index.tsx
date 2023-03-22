@@ -1,10 +1,11 @@
 import { useAuth } from "@/contexts/AuthProvider"
 import { IUserLogin, userLoginSchema } from "@/schemas/users"
+import { GetServerSideProps } from "next"
+import { getSession, signIn } from "next-auth/react"
 import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
-import { signIn } from "next-auth/react"
 
 const Login: React.FC = () => {
   const [error, setError] = useState("Esse usuário não existe em nosso banco de dados")
@@ -38,13 +39,34 @@ const Login: React.FC = () => {
             </Link>
           </p>
           {error && <p className="mb-2 text-center font-semibold text-red-600">{error}</p>}
-          <button className="rounded-md bg-blue-500 p-3 text-lg text-white" type="submit">
+          <button className="rounded-md bg-blue-500 p-3 text-lg text-white mb-2" type="submit">
             Enviar
           </button>
+          <div>
+            <p>Ou entre com <span onClick={() => signIn('github')} className="underline cursor-pointer">Github</span></p>
+          </div>
         </form>
       </div>
     </div>
   )
+}
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx)
+  
+  if(session) {
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false
+      }
+    }
+  }
+  
+  return {
+    props: {
+      session
+    },
+  }
 }
 
 export default Login
