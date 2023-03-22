@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from "react-hook-form/dist/types"
+import { signIn } from "next-auth/react"
 
 const Login: React.FC = () => {
   const [error, setError] = useState("Esse usuário não existe em nosso banco de dados")
@@ -12,8 +13,10 @@ const Login: React.FC = () => {
 
   const submitHandler: SubmitHandler<IUserLogin> = async (formData) => {
     const { password, username } = userLoginSchema.parse(formData)
+
+    console.log({ password, username })
     
-    await login({ password, username })
+    await signIn('credentials', { password, username, redirect: false })
   }
 
   return (

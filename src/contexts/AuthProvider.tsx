@@ -1,6 +1,6 @@
 import { IUserLogin, IUserSession } from "@/schemas/users"
 import { api } from "@/services/axios"
-import axios, { Axios, AxiosResponse } from "axios"
+import axios, { AxiosResponse } from "axios"
 import Router from "next/router"
 import { parseCookies, setCookie } from "nookies"
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
@@ -18,14 +18,12 @@ export function AuthProvider(props: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user
 
-  useEffect(() => {
-    const { "auction-media.accessToken": token } = parseCookies()
-    if (token === "undefined") {
-      return
-    } else {
-      axios.get<IUserSession>("/api/users?token=" + token).then((response) => setUser(response.data))
-    }
-  }, [])
+  // useEffect(() => {
+  //   const { "auction-media.accessToken": token } = parseCookies()
+  //   if (token !== "undefined") {
+  //     axios.get<IUserSession>("/api/me?token=" + token).then((response) => setUser(response.data))
+  //   }
+  // }, [])
 
   const login = useCallback(async ({ username, password }: IUserLogin) => {
     const { data: { token, user: responseUser } } = await axios.post<any, AxiosResponse<{ token: string; user: IUserSession }>, any>("/api/login", { username, password })
